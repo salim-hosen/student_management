@@ -1,0 +1,1 @@
+Database file is in the base folder named student_management
