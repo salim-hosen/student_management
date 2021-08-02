@@ -4,3 +4,6 @@ Installation:
 2. Connect Mysql Connector
 3. Open PhpMyadmin in localhost (Use Xampp)
 4. Import the student_management.sql
+
+Username: salim
+Password: salimhosen
