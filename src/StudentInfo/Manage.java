@@ -48,9 +48,9 @@ public class Manage extends javax.swing.JFrame {
     
     void DBtoTable(){
         try{
-            Connection DBcon = DBconnect.mySqlCon();
+            Connection DBcon = SQLite.getConnection();
             Statement myStmt = DBcon.createStatement();
-            String sql = "SELECT id,first_name,last_name,sex,birthdate,phone,email,address FROM studentinfo";
+            String sql = "SELECT id,first_name,last_name,sex,birth_date,phone,email,address FROM studentinfo";
             ResultSet rs = myStmt.executeQuery(sql);
 
             while(rs.next()){
@@ -58,7 +58,7 @@ public class Manage extends javax.swing.JFrame {
                 rows[1] = rs.getString("first_name");
                 rows[2] = rs.getString("last_name");
                 rows[3] = rs.getString("sex");
-                rows[4] = rs.getString("birthdate");
+                rows[4] = rs.getString("birth_date");
                 rows[5] = rs.getString("phone");
                 rows[6] = rs.getString("email");
                 rows[7] = rs.getString("address");
@@ -429,8 +429,8 @@ public class Manage extends javax.swing.JFrame {
         model.setValueAt(rows[7], numberOFrow, 7);
         
         try{
-            Connection DBcon = DBconnect.mySqlCon();
-            String sql = "UPDATE studentinfo SET id=?,first_name=?,last_name=?,sex=?,birthdate=?,phone=?,email=?,address=? WHERE id = "+updateHelp;
+            Connection DBcon = SQLite.getConnection();
+            String sql = "UPDATE studentinfo SET id=?,first_name=?,last_name=?,sex=?,birth_date=?,phone=?,email=?,address=? WHERE id = "+updateHelp;
             PreparedStatement myStmt = DBcon.prepareStatement(sql);
             
             myStmt.setString(1, rows[0]);
@@ -445,6 +445,8 @@ public class Manage extends javax.swing.JFrame {
             myStmt.executeUpdate();
         }catch(SQLException ex){
             ex.printStackTrace();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Manage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_updateActionPerformed
 
@@ -469,7 +471,7 @@ public class Manage extends javax.swing.JFrame {
         model.addRow(rows);
         try {
             // TODO add your handling code here:
-            Connection DBcon = DBconnect.mySqlCon();
+            Connection DBcon = SQLite.getConnection();
             String sql = "INSERT into studentinfo values(?,?,?,?,?,?,?,?)";
             PreparedStatement myStmt = DBcon.prepareStatement(sql);
             
@@ -485,6 +487,8 @@ public class Manage extends javax.swing.JFrame {
             myStmt.executeUpdate();
             
         } catch (SQLException ex) {
+            Logger.getLogger(Manage.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
             Logger.getLogger(Manage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_addActionPerformed
@@ -508,13 +512,15 @@ public class Manage extends javax.swing.JFrame {
         if(numberOFrow>=0){
             model.removeRow(numberOFrow);
             try{
-                Connection DBcon = DBconnect.mySqlCon();
+                Connection DBcon = SQLite.getConnection();
                 String sql = "DELETE FROM studentinfo where id = ?";
                 PreparedStatement myStmt = DBcon.prepareStatement(sql);
                 myStmt.setString(1, rows[0]);
                 myStmt.executeUpdate();
             }catch(SQLException ex){
                 ex.printStackTrace();
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(Manage.class.getName()).log(Level.SEVERE, null, ex);
             }
         }else{
             JOptionPane.showMessageDialog(rootPane, "No Row has been Selected!");

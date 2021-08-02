@@ -14,6 +14,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import java.io.File;
+import sun.rmi.runtime.Log;
 
 /**
  *
@@ -187,17 +189,11 @@ public class Login extends javax.swing.JFrame {
     private void loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginActionPerformed
         // TODO add your handling code here:
         try{
-            Connection DBcon =  DBconnect.mySqlCon();
+            Connection DBcon =  SQLite.getConnection();
             Statement logStmt = DBcon.createStatement();
-            String sql = "SELECT id,username,password FROM user";
+            String sql = "select * from user where username = '"+username.getText()+"' and password = '"+password.getText()+"'";
             ResultSet rs = logStmt.executeQuery(sql);
-            
-            rs.first();
-            
-            String dbUName = rs.getString("username");
-            String dbPass = rs.getString("password");
-            
-            if(dbUName.equals(username.getText()) && dbPass.equals(password.getText())){
+            if(rs.next()){
                 Manage manageFrame = new Manage();
                 this.dispose();
                 manageFrame.setVisible(true);
@@ -248,6 +244,58 @@ public class Login extends javax.swing.JFrame {
                 log.setLocationRelativeTo(null);
             }
         });
+        
+        
+        File file = new File("student_management.db");
+        
+        if(!file.exists()){
+            createDatabase();
+        }
+        
+    }
+    
+    private static void createDatabase() {
+        
+        try {
+            
+            String user_table = "CREATE TABLE IF NOT EXISTS user (\n"  
+                + " id integer PRIMARY KEY AUTOINCREMENT,\n"  
+                + " username VARCHAR (100),\n"  
+                + " password VARCHAR (100)\n"  
+                + ");";
+            
+            String info_table = "CREATE TABLE IF NOT EXISTS studentinfo (\n"  
+                + " id integer PRIMARY KEY AUTOINCREMENT,\n"  
+                + " first_name VARCHAR (100),\n"  
+                + " last_name VARCHAR (100),\n"
+                + " sex VARCHAR (50),\n"
+                + " birth_date VARCHAR (100),\n"
+                + " phone VARCHAR (50),\n"
+                + " email VARCHAR (100),\n"
+                + " address VARCHAR (100)\n"
+                + ");";
+
+
+            String uname = "insert into user(username,password)values('username','password')";
+            
+          
+            try{  
+                
+                Connection conn = SQLite.getConnection();  
+                Statement stmt = conn.createStatement();  
+                stmt.execute(user_table);
+                stmt.execute(info_table);
+                stmt.execute(uname);
+                conn.close();
+                
+            } catch (SQLException e) {  
+                System.out.println(e.getMessage());  
+            }
+            
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
