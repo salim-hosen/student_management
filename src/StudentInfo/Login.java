@@ -194,6 +194,11 @@ public class Login extends javax.swing.JFrame {
             String sql = "select * from user where username = '"+username.getText()+"' and password = '"+password.getText()+"'";
             ResultSet rs = logStmt.executeQuery(sql);
             if(rs.next()){
+                
+                logStmt.close();
+                rs.close();
+                DBcon.close();
+                
                 Manage manageFrame = new Manage();
                 this.dispose();
                 manageFrame.setVisible(true);
@@ -265,7 +270,7 @@ public class Login extends javax.swing.JFrame {
                 + ");";
             
             String info_table = "CREATE TABLE IF NOT EXISTS studentinfo (\n"  
-                + " id integer PRIMARY KEY AUTOINCREMENT,\n"  
+                + " id VARCHAR,\n"  
                 + " first_name VARCHAR (100),\n"  
                 + " last_name VARCHAR (100),\n"
                 + " sex VARCHAR (50),\n"
@@ -286,6 +291,8 @@ public class Login extends javax.swing.JFrame {
                 stmt.execute(user_table);
                 stmt.execute(info_table);
                 stmt.execute(uname);
+                
+                stmt.close();
                 conn.close();
                 
             } catch (SQLException e) {  

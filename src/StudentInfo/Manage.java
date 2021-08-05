@@ -42,7 +42,7 @@ public class Manage extends javax.swing.JFrame {
         table.setModel(model);
         table.setRowHeight(30);
         table.setFont(font);
-        DBtoTable();
+        this.DBtoTable();
         
     }
     
@@ -443,6 +443,8 @@ public class Manage extends javax.swing.JFrame {
             myStmt.setString(8, rows[7]);
 
             myStmt.executeUpdate();
+            myStmt.close();
+            DBcon.close();
         }catch(SQLException ex){
             ex.printStackTrace();
         } catch (ClassNotFoundException ex) {
@@ -486,6 +488,9 @@ public class Manage extends javax.swing.JFrame {
             
             myStmt.executeUpdate();
             
+            myStmt.close();
+            DBcon.close();
+            
         } catch (SQLException ex) {
             Logger.getLogger(Manage.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
@@ -517,6 +522,11 @@ public class Manage extends javax.swing.JFrame {
                 PreparedStatement myStmt = DBcon.prepareStatement(sql);
                 myStmt.setString(1, rows[0]);
                 myStmt.executeUpdate();
+                
+                myStmt.close();
+                DBcon.close();
+                
+                
             }catch(SQLException ex){
                 ex.printStackTrace();
             } catch (ClassNotFoundException ex) {
